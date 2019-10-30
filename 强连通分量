@@ -36,7 +36,6 @@ void dfs(int p)//找环
 		top--;
 	}
 }
-
   for(int i=1;i<=n;i++)//缩点
 	{
 		for(int temp=g[i];temp;temp=e[temp].next)
