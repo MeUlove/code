@@ -1,0 +1,42 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<cmath>
+#include<algorithm>
+using namespace std;
+int n,m;
+int st[1000010][30];
+int log1[1000010];
+int main()                     //ST表解决区间最值问题(RMQ),但是是静态的,不可以进行区间修改,在线算法      倍增+分治 
+{
+    scanf("%d %d",&n,&m);
+    for(int i=1;i<=n;i++)log1[i]=log1[i-1]+(1<<(log1[i-1]+1)==i);              //初始化
+
+    for(int i=1;i<=n;i++)                 //输入+初始化，st[i][0]=a[i]; 表示第i个数的值 
+    {
+        int x;
+        scanf("%d",&x);
+        st[i][0]=x;
+    }
+    
+    for(int j=1;(1<<j)<=n;j++)                         //初始化 
+    {
+        for(int i=1;i+(1<<j)-1<=n;i++)
+        {
+            st[i][j]=max(st[i][j-1],st[i+(1<<(j-1))][j-1]);    //利用了倍增思想，表示从点i到点i+2^j-1
+			//即从i走2^j步（包括从自己到自己的一步），即从i走2^（j-1）到了点i+2^(j-1)-1，再从i+2^(j-1)走2^(j-1)步 到了点i+2^(j-1)+2^(j-1)-1即i+2^j-1 
+			//由于这里表示的区间是包括端点的，所以第二次用的是点i+2^(j-1)而不是i+2^(j-1)-1 
+        }
+    }
+     //st[i][j]表示的是区间[i,i+2^j-1],i为左端点，j为左右端点间的距离取log的最大值k，也就是从左端点最多走2^k步，不然就出了区间了
+    for(int i=1;i<=m;i++)
+    {
+        int l,r;
+        scanf("%d %d",&l,&r);
+        int k=log1[r-l+1];                  //求出走r-l+1的路程的2^k步的k的最大值 
+        int ans=max(st[l][k],st[r-(1<<k)+1][k]);          //从左端点走2^k步，不一定到r，但从左走2^k步，同时从右走2^k步一定会覆盖整个区间，然后求最值 
+        printf("%d\n",ans);
+    }
+    
+    return 0;
+}
