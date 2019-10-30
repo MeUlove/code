@@ -1,0 +1,67 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<cmath>
+#include<algorithm>
+using namespace std;
+int n,m;
+int g[1000010],tot;
+struct jia
+{
+	int next;
+	int v;
+	int w;
+}e[1000010];
+void addedge(int a,int b,int c,int id)
+{
+	if(c==0)    //主件 
+	{
+		tot++;
+		e[tot].v=a;
+		e[tot].w=a*b;
+		e[tot].next=g[id];
+		g[id]=tot;
+	}
+	else      //附件 
+	{ 
+		int tmp=g[c];
+		while(tmp!=0)
+		{
+			tot++;
+			e[tot].v=e[tmp].v+a;
+			e[tot].w=e[tmp].w+a*b;
+			e[tot].next=g[c];
+			g[c]=tot;
+			tmp=e[tmp].next;
+		}
+	}
+}
+int dp[1000010];
+int main()
+{
+	scanf("%d %d",&n,&m);
+	for(int i=1;i<=m;i++)
+	{
+		int x,y,z;
+		scanf("%d %d %d",&x,&y,&z);
+		addedge(x,y,z,i);
+	}
+	
+	for(int i=1;i<=m;i++)
+	{
+		for(int j=n;j>=1;j--)
+		{
+			int tmp=g[i];
+			while(tmp!=0)
+			{
+				if(j-e[tmp].v>=0)
+				{
+					dp[j]=max(dp[j],dp[j-e[tmp].v]+e[tmp].w);
+				}
+				tmp=e[tmp].next;
+			}
+		}
+	}
+	printf("%d",dp[n]);
+	return 0;
+} 
