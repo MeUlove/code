@@ -1,36 +1,36 @@
 #include<iostream>
-#include<cstdio>
 #include<cstring>
+#include<cstdio>
 #include<cmath>
 #include<algorithm>
 using namespace std;
 int n,a[100010],tot;
-void add1(int w)
+void add1(int w)     //增根向上调整 
 {
-	int now=++tot;
-	int next=now/2;
-	while(next&&a[next]<w)
+	int now1=++tot;              //目前点的位置 
+	int next1=now1/2;            //要与当前点进行比较的位置，即当前点的根 
+	while(next1&&a[next1]>w)     //开始调整 
 	{
-		a[now]=a[next];
-		now=next;
-		next>>=1; 
+		a[now1]=a[next1];
+		now1=next1;
+		next1>>=1;
 	}
-	a[now]=w;
+	a[now1]=w;          //最后找到位置，赋值 
 }
-void pop1()
+void pop1()     //删根向下调整 
 {
-	int now=1;
-	int next=now*2;
-	if(next+1<tot&&a[next+1]>a[next])next++;
-	while(next<tot&&a[next]>a[tot])
+	int now1=1;        //当前点的位置 
+	int next1=now1*2;    //它的子节点 
+	if(next1+1<tot&&a[next1+1]<a[next1])next1++;   //找到与它进行交换的点 
+	while(next1<tot&&a[next1]<a[tot])             //交换 
 	{
-		a[now]=a[next];
-		now=next;
-		next*=2;
-		if(next+1<tot&&a[next+1]>a[next])next++;
+		a[now1]=a[next1];
+		now1=next1;
+		next1*=2;
+		if(next1+1<tot&&a[next1+1]<a[next1])next1++;
 	}
-	a[now]=a[tot];
-	tot--;
+	a[now1]=a[tot];          //找到底，在进行一次更换 
+	tot--;                   //删根 
 }
 int main()
 {
@@ -48,5 +48,4 @@ int main()
 		else if(x==2)printf("%d\n",a[1]);
 		else pop1();
 	}
-	return 0;
 }
