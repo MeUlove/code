@@ -1,0 +1,61 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<cmath>
+#include<algorithm>
+using namespace std;
+int n,m;
+int g[100010],tot;
+struct shu
+{
+	int to;
+	int next;
+	int w;
+}e[1000010];
+void addedge(int a,int b,int c)
+{
+	tot++;
+	e[tot].to=b;
+	e[tot].next=g[a];
+	e[tot].w=c;
+	g[a]=tot;
+}
+int d[100010];
+bool v[100010];
+int ans,sum=100010; 
+void dfs(int x)
+{
+	v[x]=true;
+	d[x]=1;
+	int tot1=0;
+	for(int i=g[x];i!=0;i=e[i].next)
+	{
+		int y=e[i].to;
+		if(!v[y])
+		{
+			dfs(y);
+			d[x]+=d[y];
+			tot1=max(tot1,d[y]);
+		}
+	}
+	tot1=max(tot1,n-d[x]);
+	if(sum>tot1)
+	{
+		sum=tot1;
+		ans=x;
+	}
+}
+int main()
+{
+	scanf("%d %d",&n,&m);
+	for(int i=1;i<=m;i++)
+	{
+		int x,y,z;
+		scanf("%d %d %d",&x,&y,&z);
+		addedge(x,y,z);
+		addedge(y,x,z);
+	}
+	dfs(1);
+	printf("%d",ans);
+	return 0;
+} 
