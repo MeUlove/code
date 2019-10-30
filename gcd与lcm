@@ -1,0 +1,23 @@
+int gcd(int a,int b)//辗转相除法（欧几里得算法）
+{
+	if(b==0)return a;
+	else return gcd(b,a%b);
+}
+
+int lcm(int a,int b)
+{
+	return a*b/gcd(a,b);    //(1ll*a*b/gcd(a,b))   换成longlong，lcm也要换成longlong
+}
+
+
+
+gcd证明：
+a=km,b=kn;   a>b
+a%b=k(m-n);
+
+gcd(a,b)=gcd(km,kn);
+gcd(b,a%b)=gcd(kn,k(m-n));
+.......
+gcd(k,0)=k;
+
+取模时，m与n不断相减，直至减为1，得到k
