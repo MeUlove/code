@@ -43,7 +43,3 @@ void work(int x)//分解质因数
 	}
 	dfs(1,1);
 }
-
-
-
-hankson的趣味题
