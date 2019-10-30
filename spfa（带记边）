@@ -1,0 +1,47 @@
+void spfa()
+{
+	memset(dis,999999,sizeof(dis));
+	memset(p,0,sizeof(p));
+	memset(f,false,sizeof(f));
+	int h=0,r=1;
+	dis[1]=0;
+	p[r]=1;
+	f[1]=true;
+	while(h!=r)
+	{
+		h=h%n+1;
+		int u=p[h];
+		int temp=g[u];
+		while(temp!=0)
+		{
+			if(dis[e[temp].to]>dis[u]+e[temp].w)//松弛
+			{
+				dis[e[temp].to]=dis[u]+e[temp].w;
+				if(!f[e[temp].to])
+				{
+					r=r%n+1;
+					p[r]=e[temp].to;
+					f[e[temp].to]=true;
+				}
+			}
+			temp=e[temp].next;
+		}
+		f[u]=false;
+	}
+}
+
+if(x==1)   //记边
+{
+	father[e[temp].to].dian=u;
+	father[e[temp].to].bian=temp;
+}
+
+	for(int i=n;i!=0;i=father[i].dian)//跑边
+	{
+		int aa=e[father[i].bian].w,bb=e[father[i].bian+1].w;
+		e[father[i].bian].w=999999;
+		e[father[i].bian+1].w=999999;
+		........
+		e[father[i].bian].w=aa;
+		e[father[i].bian+1].w=bb;
+	}
