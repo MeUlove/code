@@ -1,0 +1,52 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<cmath>
+#include<algorithm>
+using namespace std;
+int n,a[100010],tot;
+void add1(int w)
+{
+	int now=++tot;
+	int next=now/2;
+	while(next&&a[next]<w)
+	{
+		a[now]=a[next];
+		now=next;
+		next>>=1; 
+	}
+	a[now]=w;
+}
+void pop1()
+{
+	int now=1;
+	int next=now*2;
+	if(next+1<tot&&a[next+1]>a[next])next++;
+	while(next<tot&&a[next]>a[tot])
+	{
+		a[now]=a[next];
+		now=next;
+		next*=2;
+		if(next+1<tot&&a[next+1]>a[next])next++;
+	}
+	a[now]=a[tot];
+	tot--;
+}
+int main()
+{
+	scanf("%d",&n);
+	for(int i=1;i<=n;i++)
+	{
+		int x;
+		scanf("%d",&x);
+		if(x==1)
+		{
+			int y;
+			scanf("%d",&y);
+			add1(y);
+		}
+		else if(x==2)printf("%d\n",a[1]);
+		else pop1();
+	}
+	return 0;
+}
