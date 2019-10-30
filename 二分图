@@ -1,0 +1,24 @@
+int col[500010],ans[5],anss;
+bool dfs(int a,int b)
+{
+	col[a]=b;
+	ans[b+1]++;
+	int tmp=g[a];
+	while(tmp!=0)
+	{
+		int u=e[tmp].to;
+		if(col[u]==0&&!dfs(u,-b))return false;//未染色，染色后不能是二分图
+		if(col[u]!=0&&col[u]==col[a])return false;//染色了，但是矛盾了
+		tmp=e[tmp].next;
+	}
+	return true;
+}
+for(int i=1;i<=n;i++)
+	{
+		if(col[i]==0)
+		{
+			dfs(i,1);
+      ........
+		}		
+	}
+	
