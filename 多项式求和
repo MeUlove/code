@@ -1,0 +1,41 @@
+double qi_mi(double a,int b)
+{
+	double sum=1.0;
+	while(b)
+	{
+		if(b&1)sum=sum*a;
+		a=a*a;
+		b>>=1;
+	}
+	return sum;
+}
+double ssum(double x)
+{
+	double tot=0.0;
+	for(int i=n;i>=0;i--)
+	{
+		tot+=s[i]*qi_mi(x,i);
+	}
+	return tot;
+}//快速幂
+
+double F(double x)
+{
+    double f=0;
+    for(int i=n;i>=0;i--)
+    {
+         double t=1;
+         for(int j=1;j<=i;j++)
+         t*=x;
+         f+=s[i]*t;
+    }
+    return f;
+}//普通算法
+
+double F(double x)
+{
+     double sum=0;
+     for(int i=n;i>=0;i--)
+     sum=sum*x+s[i];
+     return sum; 
+}//秦九韶定理
