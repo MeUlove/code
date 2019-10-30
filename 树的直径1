@@ -1,0 +1,143 @@
+//dp
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<cmath>
+#include<algorithm>
+using namespace std;
+int n,m;
+int g[100010],tot;
+struct shu
+{
+	int to;
+	int next;
+	int w;
+}e[1000010];
+void addedge(int a,int b,int c)
+{
+	tot++;
+	e[tot].to=b;
+	e[tot].next=g[a];
+	e[tot].w=c;
+	g[a]=tot;
+}
+int d[100010];
+bool v[100010];
+int ans,sum=100010; 
+void dfs(int x)
+{
+	v[x]=true;
+	d[x]=1;
+	int tot1=0;
+	for(int i=g[x];i!=0;i=e[i].next)
+	{
+		int y=e[i].to;
+		if(!v[y])
+		{
+			dfs(y);
+			d[x]+=d[y];
+			tot1=max(tot1,d[y]);
+		}
+	}
+	tot1=max(tot1,n-d[x]);
+	if(sum>tot1)
+	{
+		sum=tot1;
+		ans=x;
+	}
+}
+int main()
+{
+	scanf("%d %d",&n,&m);
+	for(int i=1;i<=m;i++)
+	{
+		int x,y,z;
+		scanf("%d %d %d",&x,&y,&z);
+		addedge(x,y,z);
+		addedge(y,x,z);
+	}
+	dfs(1);
+	printf("%d",ans);
+	return 0;
+} 
+
+
+
+
+//dfs
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<cmath>
+#include<algorithm>
+using namespace std;
+int n;
+int g[200010],tot;
+struct shu
+{
+	int to;
+	int next;
+	int w;
+}e[500010];
+void addedge(int a,int b,int c)
+{
+	tot++;
+	e[tot].to=b;
+	e[tot].next=g[a];
+	e[tot].w=c;
+	g[a]=tot;
+} 
+bool v[200010];
+int d[200010]; 
+int rt[200010],ro;
+struct fa
+{
+	int dian;
+	int bian;
+} ee[500010];
+void dfs(int x,int dep)
+{
+	v[x]=true;
+	for(int i=g[x];i!=0;i=e[i].next)
+	{
+		int y=e[i].to;
+		if(!v[y])
+		{
+			dfs(y,dep);
+			if(d[x]<d[y]+e[i].w)
+			{
+				d[x]=d[y]+e[i].w;
+				rt[x]=rt[y];      //找到直径的端点 
+				if(dep!=0)      //记路径 
+				{
+					ee[x].dian=y;
+			    	ee[x].bian=i;
+			  	}
+				
+			}
+		}
+	}
+}
+int main()
+{
+	scanf("%d",&n);
+	for(int i=1;i<n;i++)
+	{
+		int x,y,z;
+		scanf("%d %d %d",&x,&y,&z);
+		addedge(x,y,z);
+		addedge(y,x,z);
+	}
+	for(int i=1;i<=n;i++)rt[i]=i;  //初始化 
+	dfs(1,0);
+	memset(v,false,sizeof(v));
+	memset(d,0,sizeof(d));
+	ro=rt[1];    //找到的直径的一个端点 
+	dfs(ro,1);
+	printf("%d\n",d[ro]);
+	for(int i=ro;i!=0;i=ee[i].dian)
+	{
+		printf("%d ",i);
+	}
+	return 0;
+}
