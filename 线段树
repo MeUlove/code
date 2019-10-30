@@ -73,3 +73,73 @@ long long sum(int l,int r,int o)
 	if(l<=mid&&r>mid)return wen(l,mid,oo)+wen(mid+1,r,oo+1);
 	return 0;
 }
+
+
+
+
+
+
+
+
+void buildshu(int l,int r,int o)  //建树 
+{
+    e[o].l=l;
+    e[o].r=r;
+    e[o].lazy=0;      //懒标记初始化为0 
+    if(l==r)          //当跑到区间为1的区间时，可以向上返回了 
+    {
+        e[o].minn=s[l];
+        return;
+    }
+    int oo=o*2;  //子节点 
+    int mid=(l+r)/2;
+    buildshu(l,mid,oo);  //左子节点 
+    buildshu(mid+1,r,oo+1);  //右子节点 
+    e[o].minn=min(e[oo].minn,e[oo+1].minn);    //求区间最值 
+    return;
+}
+
+void gaibian(int l,int r,int w,int o)    //修改区间 
+{
+    int oo=o*2;
+    int mid=(e[o].l+e[o].r)/2;
+    if(e[o].l==l&&e[o].r==r)   //查询到符合的区间 
+    {
+        e[o].minn+=w;   //先加上，算出当前区间的最值  
+        if(e[o].l!=e[o].r)    //只要不是叶节点，就加懒标记 
+        {
+            e[oo].lazy+=w;
+        	e[oo+1].lazy+=w;
+        }	
+        return;
+    }
+    if(r<=mid)gaibian(l,r,w,oo);
+    if(l>mid)gaibian(l,r,w,oo+1);
+    if(l<=mid&&r>mid)
+    {
+        gaibian(l,mid,w,oo);
+        gaibian(mid+1,r,w,oo+1);
+    }
+    e[o].minn+=w;    //一层层返 
+    return;
+}
+long long wen(int l,int r,int o)    //查询 
+{
+    int oo=o*2;
+    int mid=(e[o].l+e[o].r)/2;
+    if(e[o].lazy!=0)     //只要有懒标记，就将懒标记下放，同时更新当前的最值 
+    { 
+        e[o].minn+=e[o].lazy;   //更新 
+        if(e[o].l!=e[o].r)     //懒标记下放 
+        {
+            e[oo].lazy+=e[o].lazy;
+        	e[oo+1].lazy+=e[o].lazy;
+        }
+        e[o].lazy=0;      //清零 
+    }
+    if(e[o].l==l&&e[o].r==r)return e[o].minn;    //找到符合条件的区间，直接返回 
+    if(r<=mid)return wen(l,r,oo);
+    if(l>mid)return wen(l,r,oo+1);
+    if(r>mid&&l<=mid)return wen(l,mid,oo)+wen(mid+1,r,oo+1);
+    return 0;    //加一个return，虽然不会跑到，但是防止跑到底 
+}
