@@ -1,0 +1,55 @@
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+#include<cstring>
+#include<algorithm>
+using namespace std;
+int n,m;//n个结点，m条边
+int g[100010],tot;
+struct shu
+{
+	int to;
+	int next;
+	int w;
+} e[100010];
+void addedge(int a,int b,int c)
+{
+	tot++;
+	e[tot].to=b;
+	e[tot].w=c;
+	e[tot].next=g[a];
+	g[a]=tot;
+}
+bool v[100010];
+int tot1,ans[100010];
+void dfs(int x)
+{
+	v[x]=true;
+	tot1++;
+	ans[tot1]=x;
+	for(int i=g[x];i!=0;i=e[i].next)
+	{
+		int y=e[i].to;
+		if(!v[y])
+		{
+			dfs(y);
+		}
+		else return;
+	}
+
+	return;
+}
+int main()
+{
+	scanf("%d %d",&n,&m);
+	for(int i=1;i<=m;i++)
+	{
+		int x,y,z;
+		scanf("%d %d %d",&x,&y,&z);
+		addedge(x,y,z);
+		addedge(y,x,z); 
+	}
+	dfs(1);
+	for(int i=1;i<=tot1;i++)printf("%d ",ans[i]);
+	return 0;
+} 
