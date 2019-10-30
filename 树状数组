@@ -1,0 +1,27 @@
+树状数组
+修改点，求区间和
+
+int lowbit(int x)
+{
+	return x&(-x);
+}
+
+void add(int x,int y)
+{
+	while(x<=n)
+	{
+		s[x]+=y;
+		x+=lowbit(x);
+	}
+}
+
+int sum(int x)
+{
+	int ans=0;
+	while(x>0)
+	{
+		ans+=s[x];
+		x-=lowbit(x);
+	}
+	return ans;
+}
