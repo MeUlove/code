@@ -1,0 +1,28 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<cmath>
+#include<algorithm>
+using namespace std;
+int a[100010],b[100010];
+int n;
+int c[1010][1010];
+int main()
+{
+	scanf("%d",&n);
+	for(int i=1;i<=n;i++)scanf("%d",&a[i]);
+	for(int i=1;i<=n;i++)scanf("%d",&b[i]);
+	for(int i=1;i<=n;i++)
+	{
+		for(int j=1;j<=n;j++)
+		{
+			if(a[i]==b[j])
+			{
+				c[i][j]=max(c[i][j],c[i-1][j-1]+1);
+			}
+			else c[i][j]=max(c[i][j-1],c[i-1][j]);
+		}
+	}
+	printf("%d",c[n][n]);
+	return 0;
+}
