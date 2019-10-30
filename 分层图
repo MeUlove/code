@@ -1,0 +1,27 @@
+  cin>>n;
+	for(int i=1;i<=n;i++)
+	{
+		int x;
+		cin>>x;
+		if(i==n)jss=x;
+		for(int j=1;j<=x;j++)
+		{
+			int xx;
+			cin>>xx;
+			while(xx!=0)
+			{
+				int aa;
+				cin>>aa;
+				addedge((i-1)*nn+xx,i*nn+j,aa);//分层图的核心
+				if(i==1)
+				{
+					if(!cscs[xx])
+					{
+						cs[++css]=xx;
+						cscs[xx]=true;
+					}
+				}
+				cin>>xx;
+			}
+		}
+	}
