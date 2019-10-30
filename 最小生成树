@@ -1,0 +1,45 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<cmath>
+#include<algorithm>
+using namespace std;
+int n,m;
+struct tu
+{
+	int aa;
+	int bb;
+	int w;
+}e[1000010];
+int cmp(tu a,tu b)
+{
+	return a.w<b.w;
+}
+int ans;
+int f[50010];
+int find(int x)
+{
+	if(f[x]==x)return x;
+	else return f[x]=find(f[x]);
+}
+int main()
+{
+	scanf("%d %d",&n,&m);
+	for(int i=1;i<=n;i++)f[i]=i;
+	for(int i=1;i<=m;i++)scanf("%d %d %d",&e[i].aa,&e[i].bb,&e[i].w);
+	
+	sort(e+1,e+1+m,cmp);
+	for(int i=1;i<=m;i++)
+	{
+		int a=find(e[i].aa),b=find(e[i].bb);
+		if(a!=b)
+		{
+			f[a]=b;
+			ans+=e[i].w;
+		}
+	}
+	
+	if(ans==0)printf("orz");
+	else printf("%d",ans);
+	return 0;
+}
