@@ -1,0 +1,93 @@
+//20
+void dfs(int a,int pre)                 //初始化 
+{ 
+	par[a][0]=pre;             //par[a][0]即为距离点a 2^0，即距离a 1步的点是哪个 
+	dep[a]=dep[pre]+1;           //pre为点a的父节点，点a的深度是pre的深度+1 
+	v[a]=1;                     //确保不会从这个点向上跑 
+	for(int i=1;(1<<i)<=dep[a];i++)par[a][i]=par[par[a][i-1]][i-1];
+  //原理就是 从点a走2^i步，可以分为先走2^(i-1)步，再走2^(i-1)步
+  //而这一步是在预处理，通过par[a][0]可以得到一步一步走的点，然后预处理出从这个点走2^i步所到的点 
+	int tmp=g[a];
+	while(tmp!=0)
+	{
+		if(v[e[tmp].to]==0)        //不可以向上跑 
+		{
+			dfs(e[tmp].to,a);      //递归调用，继续跑下一个点，直到整棵树都跑完 
+		}
+		tmp=e[tmp].next;
+	}
+}
+
+int lca(int u,int v)              //求lca 
+{
+	if(dep[u]>dep[v])swap(u,v);    //保证v是较深的点，u是较浅的点
+	for(int j=20;j>=0;j--)     //v先独自跑到与u同深度的位置 
+	{
+		if(dep[v]-dep[u]<=0)break;  //此时跳出去了，到了和u同深度的位置 
+		if((dep[v]-dep[u])>>j&1)  //利用二进制，将v到u的距离利用二进制分解成几步，然后根据分解的步数向上跳
+		{
+			v=par[v][j];    //向上跳 
+		}
+	}
+  
+  /*for(int j=20;j>=0;j--)     //v先独自跑到与u同深度的位置 
+	{
+		if(dep[v]-dep[u]<=0)break;  //此时跳出去了，到了和u同深度的位置 
+		if(dep[par[v][j]]>=dep[u])v=par[v][j];    //向上跳 (粗略的，不准确)
+	}*/ 
+  
+	if(u==v)return u;  //若u和v跑到了同一个点，那么这个点就是u和v的lca 
+	for(int j=20;j>=0;j--)      //u，v到同一深度的位置，但不是同一点，于是u和v一起向上跳 
+	{
+		while(par[v][j]!=par[u][j])     //从每次能跳的最大的步伐开始跳，尽可能一次跳的更远，才会减少跳的次数 
+		{
+			u=par[u][j];          //跳过去 
+			v=par[v][j];
+		}          //若v和u跳到了同一位置，不能肯定这个点是u和v的lca，因为两个点都在跑 
+	}
+	return par[v][0];     //最后v跳到的位置是u和v的lca的子节点，于是返回这个点的父节点，即为u和v的lca 
+}
+
+
+
+//log
+for(int i=1;i<=n;i++)log1[i]=log1[i-1]+(1<<(log1[i-1]+1)==i);      
+	//初始化log(i),以便于可以直接求出距离的log值，也就是跳这个距离用2^k步的最大的k
+	//(1<<(log1[i-1]+1)==i)的含义，2^(log1[i-1]+1)是否等于距离i，如果是就+1，不是就+0 
+  
+void dfs(int a,int pre)                 //初始化 
+{ 
+	par[a][0]=pre;             //par[a][0]即为距离点a 2^0，即距离a 1步的点是哪个 
+	dep[a]=dep[pre]+1;           //pre为点a的父节点，点a的深度是pre的深度+1 
+	v[a]=1;                     //确保不会从这个点向上跑 
+	for(int i=1;(1<<i)<=dep[a];i++)par[a][i]=par[par[a][i-1]][i-1];
+	//原理就是 从点a走2^i步，可以分为先走2^(i-1)步，再走2^(i-1)步
+	//而这一步是在预处理，通过par[a][0]可以得到一步一步走的点，然后预处理出从这个点走2^i步所到的点 
+	int tmp=g[a];
+	while(tmp!=0)
+	{
+		if(v[e[tmp].to]==0)        //不可以向上跑 
+		{
+			dfs(e[tmp].to,a);      //递归调用，继续跑下一个点，直到整棵树都跑完 
+		}
+		tmp=e[tmp].next;
+	}
+}
+
+int lca(int u,int v)            //求lca 
+{
+	if(dep[u]>dep[v])swap(u,v);               //保证v是较深的点，u是较浅的点
+	while(dep[v]>dep[u])v=par[v][log1[dep[v]-dep[u]]];    //只要还没跑到，就跑2^(log1[dep[v]-dep[u]])的距离，也就是能跑的最大距离 
+	if(u==v)return u;             //若u和v跑到了同一个点，那么这个点就是u和v的lca 
+	//u，v到同一深度的位置，但不是同一点，于是u和v一起向上跳 
+	for(int j=log1[dep[v]];j>=0;j--)             //由于v到根节点s的距离是固定的，所以只用从2^(log1[dep[v]])开始跑，如果比这个距离再长就一定会跑出去 
+	{
+		while(par[v][j]!=par[u][j])            //从每次能跳的最大的步伐开始跳，尽可能一次跳的更远，才会减少跳的次数 
+		{
+			u=par[u][j];                        //跳过去 
+			v=par[v][j];
+		}
+	}              //若v和u跳到了同一位置，不能肯定这个点是u和v的lca，因为两个点都在跑 
+	return par[v][0];          //最后v跳到的位置是u和v的lca的子节点，于是返回这个点的父节点，即为u和v的lca 
+}
+
