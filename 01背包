@@ -1,0 +1,15 @@
+//二维
+	for(int i=1;i<=n;i++)
+	{
+		for(int j=1;j<=t;j++)
+		{
+			if(j>=c[i])f[i][j]=max(f[i-1][j],f[i-1][j-c[i]]+v[i]);
+			else f[i][j]=f[i-1][j];
+		}
+	}
+  
+  //一维
+  for(int i=1;i<=n;i++)
+	{
+		for(int j=t;j>=c[i];j--)f[j]=max(f[j],f[j-c[i]]+v[i]);
+	}
