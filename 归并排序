@@ -1,0 +1,60 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<cmath>
+#include<algorithm>
+using namespace std;
+int a[10000010],n;
+void merge(int l,int m,int r)//排序 
+{
+	int n1=m-l+1,n2=r-m;//找到前和后的个数 
+	int a1[n1+1],a2[n2+1]; 
+	for(int i=1;i<=n1;i++)a1[i]=a[l+i-1];
+	for(int i=1;i<=n2;i++)a2[i]=a[m+i];
+	int k=l,ii=1,jj=1;//设置指针 
+	while(ii<=n1&&jj<=n2)//通过指针，找最小的一步一步往里放 
+	{
+		if(a1[ii]<a2[jj])
+		{
+			a[k]=a1[ii];
+			ii++;
+		}
+		else 
+		{
+			a[k]=a2[jj];
+			jj++;
+		}
+		k++;
+	}
+	while(ii<=n1)//如果一边放完了，另一边直接全部放入 
+	{
+		a[k]=a1[ii];
+		ii++;
+		k++;
+	}
+	while(jj<=n2)
+	{
+		a[k]=a2[jj];
+		jj++;
+		k++;
+	}
+}
+void mergesort(int l,int r)//运用分治法，分成子序列，使子序列有序，再归并 
+{
+	if(l<r)
+	{
+		int m=(l+r)/2;//进行分治 
+		mergesort(l,m);
+		mergesort(m+1,r);
+		merge(l,m,r);//开始排序 
+	}
+	//如果l==r，则分到只有一个数，不用进行比较，返回上一步 
+}
+int main()
+{
+	scanf("%d",&n);
+	for(int i=1;i<=n;i++)scanf("%d",&a[i]);
+	mergesort(1,n);//进行归并排序 ，从小到大排序 
+	for(int i=1;i<=n;i++)printf("%d ",a[i]);
+	return 0;
+}
