@@ -1,0 +1,7 @@
+	for(int i=1;i<=m;i++)
+	{
+		for(int j=timee[i];j<=t;j++)
+		{
+			s[j]=max(s[j],s[j-timee[i]]+valuee[i]);
+		}
+	}
