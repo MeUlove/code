@@ -14,7 +14,7 @@ struct jia
 }e[1000010];
 void addedge(int a,int b,int c,int id)
 {
-	if(c==0)    //主件 
+	if(c==0)   //主件 
 	{
 		tot++;
 		e[tot].v=a;
