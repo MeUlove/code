@@ -1,0 +1,46 @@
+int top,dindex,bcnt,dfn[400010],low[400010],scc[400010];
+int s[400010],sum[400010];
+bool v[400010];
+  for(int i=1;i<=n;i++)
+	{
+		if(!dfn[i])dfs(i);
+	}
+  
+void dfs(int p)//找环
+{
+	dfn[p]=low[p]=++dindex;
+	s[++top]=p;
+	v[p]=true;
+	for(int tmp=g[p];tmp;tmp=e[tmp].next)
+	{
+		if(!dfn[e[tmp].to])
+		{
+			dfs(e[tmp].to);
+			low[p]=min(low[p],low[e[tmp].to]);
+		}
+		else if(v[e[tmp].to])low[p]=min(low[p],dfn[e[tmp].to]);
+	}
+	if(low[p]==dfn[p])
+	{
+		bcnt++;
+		scc[p]=bcnt;
+		v[p]=false;
+		sum[bcnt]++;
+		while(s[top]!=p)
+		{
+			scc[s[top]]=bcnt;
+			v[s[top]]=false;
+			sum[bcnt]++;
+			top--;
+		}
+		top--;
+	}
+}
+
+  for(int i=1;i<=n;i++)//缩点
+	{
+		for(int temp=g[i];temp;temp=e[temp].next)
+		{
+			if(scc[i]!=scc[e[temp].to])aa[scc[i]]++;
+		}
+	}
