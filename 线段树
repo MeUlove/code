@@ -1,0 +1,75 @@
+struct shu
+{
+	int l;
+	int r;
+	long long sum;
+	long long lazy;
+}e[1000100];
+
+void buildshu(int l,int r,int o)
+{
+	e[o].l=l;
+	e[o].r=r;
+	e[o].lazy=0;
+	if(l==r)
+	{
+		e[o].sum=a[l];
+		return;
+	}
+	int oo=o*2;
+	int mid=(l+r)/2;
+	buildshu(l,mid,oo);
+	buildshu(mid+1,r,oo+1);
+	e[o].sum=e[oo].sum+e[oo+1].sum;
+	return;
+}
+
+void changee(int l,int r,int o,int num)
+{
+	int oo=o*2;
+	int mid=(e[o].l+e[o].r)/2;
+	if(e[o].l==l&&e[o].r==r)
+	{
+		e[o].sum+=num*(r-l+1);
+		if(e[o].l!=e[o].r)
+		{
+			e[oo].lazy+=num;
+			e[oo+1].lazy+=num;
+		}
+		return;
+	}
+	if(r<=mid)changee(l,r,oo,num);
+	if(l>mid)changee(l,r,oo+1,num);
+	if(l<=mid&&r>mid)
+	{
+		changee(l,mid,oo,num);
+		changee(mid+1,r,oo+1,num);
+	}
+	e[o].sum+=(r-l+1)*num;
+	return;
+}
+
+long long sum(int l,int r,int o)
+{
+	int oo=o*2;
+	int mid=(e[o].l+e[o].r)/2;
+	if(e[o].lazy!=0)
+	{
+		e[o].sum+=(e[o].r-e[o].l+1)*e[o].lazy;
+		if(e[o].l!=e[o].r)
+		{
+			e[oo].lazy+=e[o].lazy;
+	    	e[oo+1].lazy+=e[o].lazy;
+		}
+		
+		e[o].lazy=0;
+	}
+	if(e[o].l==l&&e[o].r==r)
+	{
+		return e[o].sum;
+	}
+	if(r<=mid)return wen(l,r,oo);
+	if(l>mid)return wen(l,r,oo+1);
+	if(l<=mid&&r>mid)return wen(l,mid,oo)+wen(mid+1,r,oo+1);
+	return 0;
+}
