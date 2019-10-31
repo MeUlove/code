@@ -1,0 +1,9 @@
+树上前缀和
+x-->y     sum[x]+sum[y]-2*sum[lca(x,y)];   (边权)
+          sum[x]+sum[y]-sum[lca(x,y)]-sum[fa[lca(x,y)]];   (点权)
+          
+树上差分  
+          O(n)    a[i]=sigema(d[son[i]])+a[i]     sigema--dfs遍历子树来实现
+                  d[i]初始都是0，存的是改变量
+[x,y]+k   d[x]+=k;d[y]+=k;d[lca(x,y)]-=k;d[fa[lca(x,y)]]-=k;    (点权)  
+          d[x]+=k;d[y]+=k;d[lca(x,y)]-=2*k;             (边权)    (把边塞给了点，塞给深度深的点)
